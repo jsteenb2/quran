@@ -11,6 +11,9 @@ import (
 )
 
 func TestBuildQuran(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping api endpoint tests")
+	}
 	quranComplete := quran.BuildQuran("en.sahih")
 
 	if len(quranComplete.Suwar) != 114 {
@@ -32,6 +35,9 @@ func TestBuildQuran(t *testing.T) {
 }
 
 func TestBuildQuran_Indonesian(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping api endpoint tests")
+	}
 	quranComplete := quran.BuildQuran("id.muntakhab")
 
 	if len(quranComplete.Suwar) != 114 {
@@ -54,6 +60,10 @@ func TestBuildQuran_Indonesian(t *testing.T) {
 }
 
 func TestBuildQuranDB(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping largest api tests")
+	}
+
 	path := fmt.Sprintf("%s/src/github.com/jsteenb2/quran", os.Getenv("GOPATH"))
 	db, err := bolt.Open(path+"/quran.db", 0644, nil)
 	if err != nil {

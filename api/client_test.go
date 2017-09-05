@@ -8,6 +8,10 @@ import (
 )
 
 func TestGetQuranContent(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping api tests")
+	}
+
 	quranData, err := api.GetQuranContent("en.sahih")
 
 	if err != nil {
@@ -37,6 +41,10 @@ func TestGetQuranContent(t *testing.T) {
 }
 
 func TestGetTextTranslationEditions(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping api tests")
+	}
+
 	expectedEnglishEdition := api.Edition{
 		Identifier:  "en.sahih",
 		Language:    "en",
