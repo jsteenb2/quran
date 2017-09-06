@@ -172,7 +172,7 @@ func TestParseXML(t *testing.T) {
 }
 
 func TestParseQuran(t *testing.T) {
-	parsedQuran := parser.ParseQuran()
+	parsedQuran := parser.ParseQuran("quran-simple.xml")
 	for i := 0; i < 114; i++ {
 		if parsedQuran.Suraat[i].Number != i+1 {
 			t.Errorf("expected `%d` got `%d`", i+1, parsedQuran.Suraat[i].Number)

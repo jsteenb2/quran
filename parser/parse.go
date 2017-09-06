@@ -15,8 +15,8 @@ func ParseXML(data []byte) (model.Quran, error) {
 	return quranParsed, err
 }
 
-func ParseQuran() model.Quran {
-	path := fmt.Sprintf("%s/src/github.com/jsteenb2/quran/quran-uthmani.xml", os.Getenv("GOPATH"))
+func ParseQuran(filename string) model.Quran {
+	path := fmt.Sprintf("%s/src/github.com/jsteenb2/quran/%s", os.Getenv("GOPATH"), filename)
 	data, err := ioutil.ReadFile(path)
 	check(err)
 	quran, err := ParseXML(data)

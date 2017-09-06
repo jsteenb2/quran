@@ -32,7 +32,7 @@ func BuildQuranDB(db *bolt.DB) error {
 func BuildQuran(edition string) model.QuranMeta {
 	apiQuran, err := api.GetQuranContent(edition)
 	check(err)
-	parsedQuran := parser.ParseQuran()
+	parsedQuran := parser.ParseQuran("quran-simple.xml")
 
 	return model.NewQuranMeta(parsedQuran, apiQuran)
 }

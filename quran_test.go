@@ -25,8 +25,9 @@ func TestBuildQuran(t *testing.T) {
 		t.Errorf("Wrong number of ayaat for %s, expected `%d` got `%d`", arRahman.EnglishName, 78, len(arRahman.Ayaat))
 	}
 
-	if arRahman.Ayaat[0].Text != "ٱلرَّحْمَٰنُ" {
-		t.Errorf("Wrong text received, expected `%s`, got `%s`", "ٱلرَّحْمَٰنُ", arRahman.Ayaat[0].Text)
+	expectedAyahText := "الرَّحْمَنُ"
+	if arRahman.Ayaat[0].Text != expectedAyahText {
+		t.Errorf("Wrong text received, expected `%s`, got `%s`", expectedAyahText, arRahman.Ayaat[0].Text)
 	}
 
 	if arRahman.Ayaat[3].Translation != "[And] taught him eloquence." {
@@ -49,8 +50,9 @@ func TestBuildQuran_Indonesian(t *testing.T) {
 		t.Errorf("Wrong number of ayaat for %s, expected `%d` got `%d`", arRahman.EnglishName, 78, len(arRahman.Ayaat))
 	}
 
-	if arRahman.Ayaat[0].Text != "ٱلرَّحْمَٰنُ" {
-		t.Errorf("Wrong text received, expected `%s`, got `%s`", "ٱلرَّحْمَٰنُ", arRahman.Ayaat[0].Text)
+	expectedAyahText := "الرَّحْمَنُ"
+	if arRahman.Ayaat[0].Text != expectedAyahText {
+		t.Errorf("Wrong text received, expected `%s`, got `%s`", expectedAyahText, arRahman.Ayaat[0].Text)
 	}
 
 	expectedTranslation := "Dia menciptakan dan mengajarkan manusia kemampuan menjelaskan apa yang ada dalam dirinya, untuk membedakan dirinya dari makhluk lain."
