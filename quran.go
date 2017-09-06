@@ -1,7 +1,9 @@
 package quran
 
 import (
+	"fmt"
 	"log"
+	"os"
 
 	"github.com/boltdb/bolt"
 	"github.com/jsteenb2/quran/api"
@@ -13,6 +15,12 @@ var (
 	quranBucket = []byte("quran")
 )
 
+func GetQuranDB() *bolt.DB {
+	path := fmt.Sprintf("%s/src/github.com/jsteenb2/quran", os.Getenv("GOPATH"))
+	db, err := bolt.Open(path+"/quran.db", 0666, &bolt.Options{ReadOnly: true})
+	check(err)
+	return db
+}
 
 func BuildQuranDB(db *bolt.DB) error {
 	editions, err := api.GetTextTranslationEditions()
