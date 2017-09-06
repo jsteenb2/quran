@@ -23,8 +23,10 @@ func BuildQuranDB(db *bolt.DB) error {
 
 	var edition model.QuranMeta
 	for idx := range editions.Editions {
-		edition = BuildQuran(editions.Editions[idx].Identifier)
-		check(edition.Save(db, quranBucket))
+		if editions.Editions[idx].Identifier == "en.sahih" || editions.Editions[idx].Identifier == "id.muntakhab" {
+			edition = BuildQuran(editions.Editions[idx].Identifier)
+			check(edition.Save(db, quranBucket))
+		}
 	}
 	return nil
 }
