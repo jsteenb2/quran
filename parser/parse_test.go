@@ -158,11 +158,16 @@ func TestParseXML(t *testing.T) {
 		t.Errorf("Expected `%s` got `%s`", "الفلق", quran.Suraat[1].Name)
 	}
 
+	bismillah := "بِسْمِ ٱللهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ"
+	if string(quran.Suraat[0].Ayaat[0].Text) != bismillah {
+		t.Errorf("Expected `%s` got `%s`", bismillah, quran.Suraat[0].Ayaat[0].Text)
+	}
+
 	if quran.Suraat[0].Ayaat[1].NumberInSura != 2 {
 		t.Errorf("Expected `%d` got `%d`", 2, quran.Suraat[0].Ayaat[1].NumberInSura)
 	}
 
-	if quran.Suraat[1].Ayaat[4].Text != "وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ" {
+	if string(quran.Suraat[1].Ayaat[4].Text) != "وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ" {
 		t.Errorf("Expected `%s` got `%s`", "وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ", quran.Suraat[1].Ayaat[4].Text)
 	}
 

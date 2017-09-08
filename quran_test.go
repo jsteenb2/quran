@@ -26,7 +26,7 @@ func TestBuildQuran(t *testing.T) {
 	}
 
 	expectedAyahText := "الرَّحْمَنُ"
-	if arRahman.Ayaat[0].Text != expectedAyahText {
+	if string(arRahman.Ayaat[0].Text) != expectedAyahText {
 		t.Errorf("Wrong text received, expected `%s`, got `%s`", expectedAyahText, arRahman.Ayaat[0].Text)
 	}
 
@@ -51,7 +51,7 @@ func TestBuildQuran_Indonesian(t *testing.T) {
 	}
 
 	expectedAyahText := "الرَّحْمَنُ"
-	if arRahman.Ayaat[0].Text != expectedAyahText {
+	if string(arRahman.Ayaat[0].Text) != expectedAyahText {
 		t.Errorf("Wrong text received, expected `%s`, got `%s`", expectedAyahText, arRahman.Ayaat[0].Text)
 	}
 
