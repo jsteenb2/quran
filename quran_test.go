@@ -20,6 +20,11 @@ func TestBuildQuran(t *testing.T) {
 		t.Errorf("Wrong number of suwar, expected `%d`, got `%d`", 114, len(quranComplete.Suwar))
 	}
 
+	bismillah := "بِسْمِ اللهِ الرَّحْمَنِ الرَّحِيمِ"
+	if string(quranComplete.Suwar[0].Ayaat[0].Text) != bismillah {
+		t.Errorf("Expected `%s` got `%s`", bismillah, quranComplete.Suwar[0].Ayaat[0].Text)
+	}
+
 	arRahman := quranComplete.Suwar[54]
 	if len(arRahman.Ayaat) != 78 {
 		t.Errorf("Wrong number of ayaat for %s, expected `%d` got `%d`", arRahman.EnglishName, 78, len(arRahman.Ayaat))
@@ -43,6 +48,11 @@ func TestBuildQuran_Indonesian(t *testing.T) {
 
 	if len(quranComplete.Suwar) != 114 {
 		t.Errorf("Wrong number of suwar, expected `%d`, got `%d`", 114, len(quranComplete.Suwar))
+	}
+
+	bismillah := "بِسْمِ اللهِ الرَّحْمَنِ الرَّحِيمِ"
+	if string(quranComplete.Suwar[0].Ayaat[0].Text) != bismillah {
+		t.Errorf("Expected `%s` got `%s`", bismillah, quranComplete.Suwar[0].Ayaat[0].Text)
 	}
 
 	arRahman := quranComplete.Suwar[54]
