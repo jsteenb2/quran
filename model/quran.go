@@ -18,7 +18,7 @@ type QuranMeta struct {
 	api.Edition
 }
 
-func (q QuranMeta) Save(db *bolt.DB, bucket []byte) error {
+func (q QuranMeta) Save(db DBface, bucket []byte) error {
 	return db.Update(func(tx *bolt.Tx) error {
 		b, err := tx.CreateBucketIfNotExists(bucket)
 		if err != nil {
@@ -35,7 +35,7 @@ func (q QuranMeta) Save(db *bolt.DB, bucket []byte) error {
 	})
 }
 
-func GetQuran(bucket, quranEdition []byte, db *bolt.DB) (QuranMeta, error) {
+func GetQuran(bucket, quranEdition []byte, db DBface) (QuranMeta, error) {
 	var quran QuranMeta
 	err := db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket(bucket)
@@ -66,8 +66,8 @@ func gobDecode(data []byte) (QuranMeta, error) {
 	var q QuranMeta
 	buf := bytes.NewBuffer(data)
 	dec := gob.NewDecoder(buf)
-	err := dec.Decode(&q)
-	if err != nil {
+
+	if err := dec.Decode(&q); err != nil {
 		return QuranMeta{}, err
 	}
 	return q, nil

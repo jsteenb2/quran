@@ -22,7 +22,7 @@ func GetQuranDB() *bolt.DB {
 	return db
 }
 
-func BuildQuranDB(db *bolt.DB) error {
+func BuildQuranDB(db model.DBface) error {
 	editions, err := api.GetTextTranslationEditions()
 	if err != nil {
 		log.Println(err)
