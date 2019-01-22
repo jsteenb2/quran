@@ -3,54 +3,36 @@ package api
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"log"
 	"net/http"
+
+	"github.com/pkg/errors"
 )
 
 func GetTextTranslationEditions() (EditionResponse, error) {
-	body, err := getEditions("text", "translation")
-	check(err)
+	resp, err := http.Get("http://api.alquran.cloud/edition?format=text&type=translation")
+	if err != nil {
+		return EditionResponse{}, err
+	}
+	defer resp.Body.Close()
 
 	var editions EditionResponse
-	err = json.Unmarshal(body, &editions)
-	check(err)
-	return editions, err
-}
-
-func getEditions(format, textType string) ([]byte, error) {
-	resp, err := http.Get(fmt.Sprintf("http://api.alquran.cloud/edition?format=%s&type=%s", format, textType))
-	check(err)
-
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	check(err)
-	return body, err
+	if err := json.NewDecoder(resp.Body).Decode(&editions); err != nil {
+		return EditionResponse{}, errors.Wrap(err, "unmarshalling editions")
+	}
+	return editions, nil
 }
 
 func GetQuranContent(edition string) (QuranResponse, error) {
-	body, err := getQuran(edition)
-	check(err)
+	resp, err := http.Get(fmt.Sprintf("http://api.alquran.cloud/quran/%s", edition))
+	if err != nil {
+		return QuranResponse{}, err
+	}
+	defer resp.Body.Close()
 
 	var quran QuranResponse
-	err = json.Unmarshal(body, &quran)
-	check(err)
-
-	return quran, err
-}
-
-func getQuran(edition string) ([]byte, error) {
-	resp, err := http.Get(fmt.Sprintf("http://api.alquran.cloud/quran/%s", edition))
-	check(err)
-
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	check(err)
-	return body, err
-}
-
-func check(err error) {
-	if err != nil {
-		log.Println(err)
+	if err := json.NewDecoder(resp.Body).Decode(&quran); err != nil {
+		return QuranResponse{}, errors.Wrap(err, "unmarshalling quran response")
 	}
+
+	return quran, nil
 }

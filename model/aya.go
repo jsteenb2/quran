@@ -8,9 +8,9 @@ import (
 )
 
 type Aya struct {
-	NumberInSura int        `xml:"index,attr"`
-	Bismillah    string     `xml:"bismillah,attr,omitempty"`
-	Text         ArabicText `xml:"text,attr"`
+	NumberInSura int    `json:"numberInSurah" xml:"index,attr"`
+	Bismillah    string `json:"bismillah" xml:"bismillah,attr,omitempty"`
+	Text         string `json:"arabicText" xml:"text,attr"`
 }
 
 type ArabicText string

@@ -1,52 +1,52 @@
 package quran
 
 import (
-	"log"
-
 	"github.com/boltdb/bolt"
 	"github.com/jsteenb2/quran/api"
 	"github.com/jsteenb2/quran/model"
 	"github.com/jsteenb2/quran/parser"
+	"github.com/pkg/errors"
 )
 
 var (
 	quranBucket = []byte("quran")
 )
 
-func GetQuranDB(dbPath string) *bolt.DB {
-	//path := fmt.Sprintf("%s/src/github.com/jsteenb2/quran", os.Getenv("GOPATH"))
-	db, err := bolt.Open(dbPath, 0666, &bolt.Options{ReadOnly: true})
-	check(err)
-	return db
+func GetQuranDB(dbPath string) (*bolt.DB, error) {
+	return bolt.Open(dbPath, 0666, &bolt.Options{ReadOnly: true})
 }
 
 func BuildQuranDB(db model.DBface) error {
 	editions, err := api.GetTextTranslationEditions()
 	if err != nil {
-		log.Println(err)
 		return err
 	}
 
 	var edition model.QuranMeta
 	for idx := range editions.Editions {
-		if editions.Editions[idx].Identifier == "en.sahih" || editions.Editions[idx].Identifier == "id.muntakhab" {
-			edition = BuildQuran(editions.Editions[idx].Identifier)
-			check(edition.Save(db, quranBucket))
+		if editions.Editions[idx].Identifier != "en.sahih" && editions.Editions[idx].Identifier != "id.muntakhab" {
+			continue
+		}
+		edition, err = BuildQuran(editions.Editions[idx].Identifier)
+		if err != nil {
+			return err
+		}
+		if err := edition.Save(db, quranBucket); err != nil {
+			return err
 		}
 	}
 	return nil
 }
 
-func BuildQuran(edition string) model.QuranMeta {
+func BuildQuran(edition string) (model.QuranMeta, error) {
 	apiQuran, err := api.GetQuranContent(edition)
-	check(err)
-	parsedQuran := parser.ParseQuran("quran-simple.xml")
-
-	return model.NewQuranMeta(parsedQuran, apiQuran)
-}
-
-func check(err error) {
 	if err != nil {
-		log.Println(err)
+		return model.QuranMeta{}, errors.Wrap(err, "BuildQuran")
 	}
+	parsedQuran, err := parser.ParseQuran("quran-simple.xml")
+	if err != nil {
+		return model.QuranMeta{}, errors.Wrap(err, "BuildQuran")
+	}
+
+	return model.NewQuranMeta(parsedQuran, apiQuran), nil
 }

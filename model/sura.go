@@ -9,12 +9,12 @@ type Sura struct {
 }
 
 type SuraMeta struct {
-	Number                 int
-	Name                   string
-	EnglishName            string
-	EnglishNameTranslation string
-	RevelationType         string
-	Ayaat                  []AyahMeta
+	Number                 int        `json:"surahNumber"`
+	Name                   string     `json:"name"`
+	EnglishName            string     `json:"englishTransliteration"`
+	EnglishNameTranslation string     `json:"englishName"`
+	RevelationType         string     `json:"revelationType"`
+	Ayaat                  []AyahMeta `json:"ayaat"`
 }
 
 func NewSuraMeta(tanzilSura Sura, apiSura api.Surah) SuraMeta {
