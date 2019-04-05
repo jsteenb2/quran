@@ -1,10 +1,10 @@
-package api_test
+package tanzil
 
 import (
-	"log"
+	"context"
+	"net/http"
 	"testing"
-
-	"github.com/jsteenb2/quran/api"
+	"time"
 )
 
 func TestGetQuranContent(t *testing.T) {
@@ -12,10 +12,11 @@ func TestGetQuranContent(t *testing.T) {
 		t.Skip("skipping api tests")
 	}
 
-	quranData, err := api.GetQuranContent("en.sahih")
+	apiClient := newClient(&http.Client{Timeout: 30 * time.Second})
 
+	quranData, err := apiClient.getQuranContent(context.TODO(), "en.sahih")
 	if err != nil {
-		log.Println(err)
+		t.Fatal(err)
 	}
 
 	if len(quranData.Data.Surahs) != 114 {
@@ -45,7 +46,7 @@ func TestGetTextTranslationEditions(t *testing.T) {
 		t.Skip("skipping api tests")
 	}
 
-	expectedEnglishEdition := api.Edition{
+	expectedEnglishEdition := Edition{
 		Identifier:  "en.sahih",
 		Language:    "en",
 		Name:        "Saheeh International",
@@ -54,7 +55,7 @@ func TestGetTextTranslationEditions(t *testing.T) {
 		Type:        "translation",
 	}
 
-	expectedIndonesEdition := api.Edition{
+	expectedIndonesEdition := Edition{
 		Identifier:  "id.indonesian",
 		Language:    "id",
 		Name:        "Bahasa Indonesia",
@@ -63,24 +64,25 @@ func TestGetTextTranslationEditions(t *testing.T) {
 		Type:        "translation",
 	}
 
-	editions, err := api.GetTextTranslationEditions()
+	apiClient := newClient(&http.Client{Timeout: 30 * time.Second})
 
+	editions, err := apiClient.getTextTranslationEditions(context.TODO())
 	if err != nil {
-		t.Error(err)
+		t.Fatal(err)
 	}
 
 	if !contains(editions.Editions, expectedEnglishEdition) {
-		t.Errorf("did not get expected edition, expected `%v`", expectedEnglishEdition)
+		t.Errorf("did not get expected Edition, expected `%v`", expectedEnglishEdition)
 	}
 
 	if !contains(editions.Editions, expectedIndonesEdition) {
-		t.Errorf("did not get expected edition, expected `%v`", expectedIndonesEdition)
+		t.Errorf("did not get expected Edition, expected `%v`", expectedIndonesEdition)
 	}
 }
 
-func contains(s []api.Edition, e api.Edition) bool {
-	for _, a := range s {
-		if a == e {
+func contains(hay []Edition, needle Edition) bool {
+	for _, a := range hay {
+		if a == needle {
 			return true
 		}
 	}
