@@ -14,7 +14,7 @@ func TestGetQuranContent(t *testing.T) {
 		t.Skip("skipping api tests")
 	}
 
-	client := &http.Client{Timeout: 3 * time.Minute}
+	client := &http.Client{Timeout: 5 * time.Minute}
 
 	quran, err := tanzil.NewQuran(context.TODO(), client, "en.sahih")
 	if err != nil {

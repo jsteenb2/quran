@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func TestGetQuranContent(t *testing.T) {
+func TestGetAPIQuranContent(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping api tests")
 	}
@@ -19,25 +19,25 @@ func TestGetQuranContent(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if len(quranData.Data.Surahs) != 114 {
-		t.Errorf("Did not get expected # of suraat, expected `%d` got `%d`", 114, len(quranData.Data.Surahs))
+	if len(quranData.Surahs) != 114 {
+		t.Errorf("Did not get expected # of suraat, expected `%d` got `%d`", 114, len(quranData.Surahs))
 	}
 
-	if quranData.Data.Surahs[1].EnglishNameTranslation != "The Cow" {
-		t.Errorf("Did not receive surat al baqarah, expected `%s`, got `%s`", "The Cow", quranData.Data.Surahs[1].EnglishNameTranslation)
+	if quranData.Surahs[1].EnglishNameTranslation != "The Cow" {
+		t.Errorf("Did not receive surat al baqarah, expected `%s`, got `%s`", "The Cow", quranData.Surahs[1].EnglishNameTranslation)
 	}
 
-	if quranData.Data.Surahs[0].EnglishNameTranslation != "The Opening" {
-		t.Errorf("Did not receive surat al baqarah, expected `%s`, got `%s`", "The Opening", quranData.Data.Surahs[0].EnglishNameTranslation)
+	if quranData.Surahs[0].EnglishNameTranslation != "The Opening" {
+		t.Errorf("Did not receive surat al baqarah, expected `%s`, got `%s`", "The Opening", quranData.Surahs[0].EnglishNameTranslation)
 	}
 
-	if len(quranData.Data.Surahs[1].Ayahs) != 286 {
-		t.Errorf("Did not receive all surat al baqarah, expected `%d`, got `%d`", 286, len(quranData.Data.Surahs[1].Ayahs))
+	if len(quranData.Surahs[1].Ayahs) != 286 {
+		t.Errorf("Did not receive all surat al baqarah, expected `%d`, got `%d`", 286, len(quranData.Surahs[1].Ayahs))
 	}
 
 	bismillah := "In the name of Allah, the Entirely Merciful, the Especially Merciful."
-	if quranData.Data.Surahs[0].Ayahs[0].Translation != bismillah {
-		t.Errorf("Did not recieve correct translation, expected `%s`, got `%s`", bismillah, quranData.Data.Surahs[0].Ayahs[0].Translation)
+	if quranData.Surahs[0].Ayahs[0].Translation != bismillah {
+		t.Errorf("Did not recieve correct translation, expected `%s`, got `%s`", bismillah, quranData.Surahs[0].Ayahs[0].Translation)
 	}
 }
 
@@ -71,11 +71,11 @@ func TestGetTextTranslationEditions(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if !contains(editions.Editions, expectedEnglishEdition) {
+	if !contains(editions, expectedEnglishEdition) {
 		t.Errorf("did not get expected Edition, expected `%v`", expectedEnglishEdition)
 	}
 
-	if !contains(editions.Editions, expectedIndonesEdition) {
+	if !contains(editions, expectedIndonesEdition) {
 		t.Errorf("did not get expected Edition, expected `%v`", expectedIndonesEdition)
 	}
 }

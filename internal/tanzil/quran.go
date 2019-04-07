@@ -40,23 +40,23 @@ type (
 
 	Ayah struct {
 		tanzilAyah
-		alQuranAPIAyah
+		apiAyah
 	}
 )
 
-func newQuranMeta(tanzilQuran tanzilQuran, apiQuran quranResponse) Quran {
+func newQuranMeta(tanzilQuran tanzilQuran, apiQuran apiQuran) Quran {
 	suwar := make([]Surah, 0)
-	for idx := range apiQuran.Data.Surahs {
-		suwar = append(suwar, newSuraMeta(tanzilQuran.Suraat[idx], apiQuran.Data.Surahs[idx]))
+	for idx := range apiQuran.Surahs {
+		suwar = append(suwar, newSuraMeta(tanzilQuran.Suraat[idx], apiQuran.Surahs[idx]))
 	}
 
 	return Quran{
-		Edition: apiQuran.Data.Edition,
+		Edition: apiQuran.Edition,
 		Suwar:   suwar,
 	}
 }
 
-func newSuraMeta(tanzilSura tanzilSura, apiSura surah) Surah {
+func newSuraMeta(tanzilSura tanzilSura, apiSura apisurah) Surah {
 	newSura := Surah{
 		Number:                 tanzilSura.Number,
 		Name:                   tanzilSura.Name,
@@ -68,8 +68,8 @@ func newSuraMeta(tanzilSura tanzilSura, apiSura surah) Surah {
 	ayaat := make([]Ayah, 0, len(tanzilSura.Ayaat))
 	for idx := range tanzilSura.Ayaat {
 		ayaat = append(ayaat, Ayah{
-			tanzilAyah:     tanzilSura.Ayaat[idx],
-			alQuranAPIAyah: apiSura.Ayahs[idx],
+			tanzilAyah: tanzilSura.Ayaat[idx],
+			apiAyah:    apiSura.Ayahs[idx],
 		})
 	}
 

@@ -18,60 +18,56 @@ func newClient(client *http.Client) *alQuranAPIClient {
 	}
 }
 
-func (a *alQuranAPIClient) getTextTranslationEditions(ctx context.Context) (editionResponse, error) {
-	var editions editionResponse
+func (a *alQuranAPIClient) getTextTranslationEditions(ctx context.Context) ([]Edition, error) {
+	var editions struct {
+		Editions []Edition `json:"data"`
+	}
 	err := a.c.
-		Get("/Edition?format=text&type=translation").
+		Get("/edition?format=text&type=translation").
 		Success(httpc.StatusOK()).
 		Decode(httpc.JSONDecode(&editions)).
 		Do(ctx)
-	return editions, err
+	return editions.Editions, err
 }
 
-func (a *alQuranAPIClient) getQuranContent(ctx context.Context, edition string) (quranResponse, error) {
-	var quran quranResponse
+func (a *alQuranAPIClient) getQuranContent(ctx context.Context, edition string) (apiQuran, error) {
+	var quran struct {
+		Data apiQuran `json:"data"`
+	}
 	err := a.c.
 		Get("/quran/" + edition).
 		Success(httpc.StatusOK()).
 		Decode(httpc.JSONDecode(&quran)).
 		Do(ctx)
-	return quran, err
+	return quran.Data, err
 }
 
-type quranResponse struct {
-	Code   int
-	Status string
-	Data   struct {
-		Surahs  []surah
+type (
+	apiQuran struct {
+		Surahs  []apisurah
 		Edition Edition
 	}
-}
 
-type editionResponse struct {
-	Code     int
-	Status   string
-	Editions []Edition `json:"data"`
-}
+	Edition struct {
+		Identifier  string
+		Language    string
+		Name        string
+		EnglishName string
+		Format      string
+		Type        string
+	}
 
-type Edition struct {
-	Identifier  string
-	Language    string
-	Name        string
-	EnglishName string
-	Format      string
-	Type        string
-}
+	apisurah struct {
+		Number                 int
+		Name                   string
+		EnglishName            string
+		EnglishNameTranslation string
+		RevelationType         string
+		Ayahs                  []apiAyah
+	}
+)
 
-type surah struct {
-	Number                 int
-	Name                   string
-	EnglishName            string
-	EnglishNameTranslation string
-	RevelationType         string
-	Ayahs                  []alQuranAPIAyah
-}
-
-type alQuranAPIAyah struct {
+type apiAyah struct {
 	Number      int          `json:"number"`
 	Translation string       `json:"text"`
 	Juz         int          `json:"juz"`
@@ -80,6 +76,10 @@ type alQuranAPIAyah struct {
 	Ruku        int          `json:"ruku"`
 	HizbQuarter int          `json:"hizbQuarter"`
 	Sajda       *sajdahDeets `json:"sajda"`
+}
+
+func (a apiAyah) HasSajdah() bool {
+	return a.Sajda.Recommended || a.Sajda.Obligatory
 }
 
 type sajdahDeets struct {
@@ -107,8 +107,4 @@ func (s *sajdahDeets) UnmarshalJSON(b []byte) error {
 	s.Obligatory = obl
 
 	return nil
-}
-
-func (a alQuranAPIAyah) HasSajdah() bool {
-	return a.Sajda.Recommended || a.Sajda.Obligatory
 }
