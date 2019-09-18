@@ -89,22 +89,22 @@ type sajdahDeets struct {
 }
 
 func (s *sajdahDeets) UnmarshalJSON(b []byte) error {
-	var m map[string]interface{}
+	var m struct {
+		ID          *int `json:"id"`
+		Recommended bool `json:"recommended"`
+		Obligatory  bool `json:"obligatory"`
+	}
 	if err := json.Unmarshal(b, &m); err != nil {
 		return nil
 	}
 
-	id, ok := m["id"].(float64)
-	if !ok {
+	if m.ID == nil {
 		return nil
 	}
 
-	rec, _ := m["recommended"].(bool)
-	obl, _ := m["obligatory"].(bool)
-
-	s.ID = int(id)
-	s.Recommended = rec
-	s.Obligatory = obl
+	s.ID = *m.ID
+	s.Recommended = m.Recommended
+	s.Obligatory = m.Obligatory
 
 	return nil
 }

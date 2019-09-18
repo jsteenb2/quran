@@ -12,7 +12,7 @@ func TestGetAPIQuranContent(t *testing.T) {
 		t.Skip("skipping api tests")
 	}
 
-	apiClient := newClient(&http.Client{Timeout: 30 * time.Second})
+	apiClient := newClient(&http.Client{Timeout: 2 * time.Minute})
 
 	quranData, err := apiClient.getQuranContent(context.TODO(), "en.sahih")
 	if err != nil {
